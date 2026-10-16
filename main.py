@@ -12,12 +12,20 @@ from kivymd.uix.scrollview import ScrollView
 from widgets.plant_card import card_layout as CL
 from screens.plant_index import PlantIndex
 from screens.welcome_screen import WelcomeScreen
+from database.database_func import start_db
+from screens.plant_detail import PlantDetail
 
 class JosehApp(MDApp):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        start_db()
+        self.selected_plant = None
+
     def build(self):                                    # replaces on_mount + push_screen
         self.sm = MDScreenManager()
         self.sm.add_widget(WelcomeScreen(name="welcome"))
         self.sm.add_widget(PlantIndex(name="plantindex"))
+        self.sm.add_widget(PlantDetail(name="plantdetail"))
         return self.sm
 
 JosehApp().run()

@@ -6,17 +6,13 @@ from kivymd.uix.fitimage import FitImage
 from kivymd.uix.widget import MDWidget
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.card import MDCard
+from database.database_func import card_query
 
 def card_layout(self, instance):
 
-    self.plants = [
-    {"name": "Basil",     "type": "Herb"},
-    {"name": "Tomato",    "type": "Vegetable"},
-    {"name": "Lavender",  "type": "Flower"},
-    {"name": "Aloe Vera", "type": "Succulent"},
-    ]
+    self.plants = card_query()
 
-    card_layout=MDBoxLayout(orientation="vertical")
+    card_layout=MDBoxLayout(orientation="vertical", size_hint_y=None, adaptive_height=True)
     for plant in self.plants:
         card1 = card_constructor(self, plant["name"],None)
         card_layout.add_widget(card1)
@@ -24,16 +20,48 @@ def card_layout(self, instance):
     return card_layout
 
 def card_constructor(self, plant, instance):
-        card=MDCard(orientation="vertical", size_hint=(None, None), size=("400px", "200px"))
+        card=MDCard(
+             orientation="horizontal", 
+             size_hint=(None, None), 
+             size=("400dp", "200dp"), 
+             on_release=lambda instance: change_to_details_screen(self, plant_name, instance),
+             style="outlined",
+             padding="12dp",
+             radius=[24,24,24,24],
+             theme_bg_color="Custom",
+             md_bg_color="#F1F5E9",
+             theme_line_color="Custom",
+             line_color="#A3B18A"
+
+             )
+        
+        text_layout=MDBoxLayout(orientation="vertical")
         first_line_card=MDBoxLayout(orientation="horizontal")
         second_line_card=MDBoxLayout(orientation="horizontal")
+
+        image_widget=FitImage(
+             source=r"C:\Users\rodrigo.fsilva61\Documents\GitHub\PlantGuide\picture.jpg",
+             size_hint=(None, None),
+             size=("160dp", "160dp"),
+             fit_mode="cover"
+             )
 
         for dic_plant in self.plants:
              if dic_plant["name"] == plant:
                   found_plant = dic_plant
 
-        first_line_card.add_widget(MDLabel(text=found_plant["name"]))
-        second_line_card.add_widget(MDLabel(text=found_plant["type"]))
-        card.add_widget(first_line_card)
-        card.add_widget(second_line_card)
+        plant_name = found_plant["name"]
+
+        first_line_card.add_widget(MDLabel(text=f"Plant name: {found_plant["name"]}"))
+        second_line_card.add_widget(MDLabel(text=f"Plant type: {found_plant["type"]}"))
+        text_layout.add_widget(first_line_card)
+        text_layout.add_widget(second_line_card)
+        card.add_widget(image_widget)
+        card.add_widget(text_layout)
         return card
+
+def change_to_details_screen(self, plant_name, instance):
+     self.app = MDApp.get_running_app()
+     self.app.selected_plant=plant_name
+     print(self.app.selected_plant)
+     self.app.sm.current="plantdetail"

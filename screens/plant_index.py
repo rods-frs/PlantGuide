@@ -14,6 +14,7 @@ from widgets.plant_card import card_layout as CL
 class PlantIndex(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.selected_plant=None
         self.md_bg_color = self.theme_cls.backgroundColor
 
         view=ScrollView()
@@ -21,6 +22,6 @@ class PlantIndex(MDScreen):
 
         card_layout=CL(self, None)
 
-        main_layout.add_widget(card_layout)
-        view.add_widget(main_layout)
+        view.add_widget(card_layout)
+        self.add_widget(main_layout)
         self.add_widget(view)
