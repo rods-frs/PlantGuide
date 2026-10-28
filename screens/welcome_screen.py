@@ -1,10 +1,11 @@
-from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.label import MDLabel
 from kivymd.uix.fitimage import FitImage
+from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDIconButton
+from kivymd.app import MDApp
 from path_resolver import RESOURCES_PATH
+
 
 class WelcomeScreen(MDScreen):
     def __init__(self, **kwargs):
@@ -30,7 +31,7 @@ class WelcomeScreen(MDScreen):
             text_size=(None, None),
             adaptive_size=True
             )
-        
+
         next_button=MDIconButton(icon="arrow-right", on_release=self.pass_screen, pos_hint={"center_x": 0.5, "top": 0.10})
 
         layout.add_widget(welcome_message)
