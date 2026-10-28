@@ -7,6 +7,7 @@ from kivymd.uix.widget import MDWidget
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.card import MDCard
 from database.database_func import card_query
+from path_resolver import RESOURCES_PATH
 
 def card_layout(self, instance):
 
@@ -14,12 +15,12 @@ def card_layout(self, instance):
 
     card_layout=MDBoxLayout(orientation="vertical", size_hint_y=None, adaptive_height=True)
     for plant in self.plants:
-        card1 = card_constructor(self, plant["name"],None)
+        card1 = card_constructor(self, plant["name"], plant["search_name"], None)
         card_layout.add_widget(card1)
 
     return card_layout
 
-def card_constructor(self, plant, instance):
+def card_constructor(self, plant, search_name, instance):
         card=MDCard(
              orientation="horizontal", 
              size_hint=(None, None), 
@@ -40,7 +41,7 @@ def card_constructor(self, plant, instance):
         second_line_card=MDBoxLayout(orientation="horizontal")
 
         image_widget=FitImage(
-             source=r"C:\Users\rodrigo.fsilva61\Documents\GitHub\PlantGuide\picture.jpg",
+             source=str(RESOURCES_PATH / "card" / f"{search_name}.jpg"),
              size_hint=(None, None),
              size=("160dp", "160dp"),
              fit_mode="cover"

@@ -4,6 +4,7 @@ from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.fitimage import FitImage
 from kivymd.uix.button import MDIconButton
+from path_resolver import RESOURCES_PATH
 
 class WelcomeScreen(MDScreen):
     def __init__(self, **kwargs):
@@ -14,7 +15,7 @@ class WelcomeScreen(MDScreen):
         layout=MDFloatLayout()
 
         image_widget=FitImage(
-            source=r"C:\Users\rodrigo.fsilva61\Documents\GitHub\PlantGuide\picture.jpg",
+            source=str(RESOURCES_PATH / "welcome.jpg"),
             size_hint=(None, None),
             size=("160dp", "160dp"),
             fit_mode="cover",

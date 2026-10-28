@@ -14,14 +14,17 @@ from screens.plant_index import PlantIndex
 from screens.welcome_screen import WelcomeScreen
 from database.database_func import start_db
 from screens.plant_detail import PlantDetail
+from pathlib import Path
 
 class JosehApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        start_db()
         self.selected_plant = None
 
-    def build(self):                                    # replaces on_mount + push_screen
+    def build(self): 
+        app = MDApp.get_running_app()
+        db_path = Path(app.user_data_dir) / "plants.db"
+        start_db(db_path)                                
         self.sm = MDScreenManager()
         self.sm.add_widget(WelcomeScreen(name="welcome"))
         self.sm.add_widget(PlantIndex(name="plantindex"))

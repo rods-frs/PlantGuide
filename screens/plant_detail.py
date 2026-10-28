@@ -7,6 +7,7 @@ from kivymd.uix.fitimage import FitImage
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.card import MDCard
 from database.database_func import detail_query
+from path_resolver import RESOURCES_PATH
 
 
 class PlantDetail(MDScreen):
@@ -41,8 +42,7 @@ class PlantDetail(MDScreen):
         info_layout.add_widget(self.plant_size_widget)
 
         # Image: center right
-        image_widget = FitImage(
-            source=r"C:\Users\rodrigo.fsilva61\Documents\GitHub\PlantGuide\picture.jpg",
+        self.image_widget = FitImage(
             size_hint=(None, None),
             size=("160dp", "160dp"),
             fit_mode="cover",
@@ -51,7 +51,7 @@ class PlantDetail(MDScreen):
 
         main_layout.add_widget(go_back_button)
         main_layout.add_widget(info_layout)
-        main_layout.add_widget(image_widget)
+        main_layout.add_widget(self.image_widget)
         self.add_widget(main_layout)
 
     def on_pre_enter(self, *args):
@@ -60,6 +60,7 @@ class PlantDetail(MDScreen):
         data = data[0]
         self.selected_plant = None
 
+        self.image_widget.source=str(RESOURCES_PATH / "detail" / data['search_name']) + ".jpg"
         self.plant_name_widget.label.text = f"Plant name: {data['name']}"
         self.plant_type_widget.label.text = f"Type: {data['type']}"
         self.plant_water_widget.label.text = f"Water quantity per day: {data['water']}"
