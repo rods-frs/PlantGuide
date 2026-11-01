@@ -1,8 +1,9 @@
+from kivy.metrics import dp
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.label import MDLabel
+from kivymd.uix.scrollview import MDScrollView
+from kivymd.uix.label import MDLabel, MDIcon
 from kivymd.uix.fitimage import FitImage
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.card import MDCard
@@ -15,55 +16,65 @@ class PlantDetail(MDScreen):
         super().__init__(**kwargs)
         self.md_bg_color = self.theme_cls.backgroundColor
 
-        main_layout = MDFloatLayout()
+        root = MDBoxLayout(orientation="vertical")
 
-        # Arrow: top left
+        # Top bar: back arrow
+        top_bar = MDBoxLayout(
+            orientation="horizontal",
+            adaptive_height=True,
+            padding=[dp(8), dp(8), dp(8), 0],
+        )
         go_back_button = MDIconButton(
             icon="arrow-left",
             on_release=self.go_back,
-            pos_hint={"x": 0.02, "top": 0.98},
         )
+        top_bar.add_widget(go_back_button)
 
-        # Cards: center left, stacked in a column that sizes itself to its children
-        self.plant_name_widget = self.make_nature_card()
-        self.plant_type_widget = self.make_nature_card()
-        self.plant_water_widget = self.make_nature_card()
-        self.plant_size_widget = self.make_nature_card()
-
-        info_layout = MDBoxLayout(
-            orientation="vertical",
-            adaptive_size=True,
-            spacing="12dp",
-            pos_hint={"x": 0.03, "center_y": 0.5},
-        )
-        info_layout.add_widget(self.plant_name_widget)
-        info_layout.add_widget(self.plant_type_widget)
-        info_layout.add_widget(self.plant_water_widget)
-        info_layout.add_widget(self.plant_size_widget)
-
-        # Image: center right
+        # Image: rounded, full width, same radius as the water cards
         self.image_widget = FitImage(
-            size_hint=(None, None),
-            size=("160dp", "160dp"),
-            fit_mode="cover",
-            pos_hint={"right": 0.97, "center_y": 0.5},
+            size_hint=(1, None),
+            height=dp(200),
+            fit_mode="scale-down",
+            radius=[dp(16)],
         )
 
-        main_layout.add_widget(go_back_button)
-        main_layout.add_widget(info_layout)
-        main_layout.add_widget(self.image_widget)
-        self.add_widget(main_layout)
+        # Cards (same attribute names as before)
+        self.plant_name_widget = self.make_detail_card("sprout")
+        self.plant_type_widget = self.make_detail_card("shape-outline")
+        self.plant_water_widget = self.make_detail_card("water", chevron=True)
+        self.plant_water_widget.bind(on_release=self.water_screen_change)
+        self.plant_size_widget = self.make_detail_card("ruler")
+
+        # Scrollable column, full width, same padding/spacing as the water card
+        content = MDBoxLayout(
+            orientation="vertical",
+            adaptive_height=True,
+            padding=dp(16),
+            spacing=dp(14),
+        )
+        content.add_widget(self.image_widget)
+        content.add_widget(self.plant_name_widget)
+        content.add_widget(self.plant_type_widget)
+        content.add_widget(self.plant_water_widget)
+        content.add_widget(self.plant_size_widget)
+
+        scroll = MDScrollView(do_scroll_x=False)
+        scroll.add_widget(content)
+
+        root.add_widget(top_bar)
+        root.add_widget(scroll)
+        self.add_widget(root)
 
     def on_pre_enter(self, *args):
         self.selected_plant = self.get_selected_plant()
         data = detail_query(self.selected_plant)
         data = data[0]
-        self.selected_plant = None
 
         self.image_widget.source=str(RESOURCES_PATH / "detail" / data['search_name']) + ".jpg"
         self.plant_name_widget.label.text = f"Plant name: {data['name']}"
         self.plant_type_widget.label.text = f"Type: {data['type']}"
         self.plant_water_widget.label.text = f"Water quantity per day: {data['water']}"
+
         self.plant_size_widget.label.text = f"Size: {data['size']}"
 
     def get_selected_plant(self):
@@ -76,27 +87,41 @@ class PlantDetail(MDScreen):
         self.app = MDApp.get_running_app()
         self.app.sm.current = "plantindex"
 
-    def make_nature_card(self):
+    def water_screen_change(self, instance):
+        self.app = MDApp.get_running_app()
+        self.app.sm.current = "water_detail"
+
+    def make_detail_card(self, icon="information-outline", chevron=False):
+        # Same look as the water card: surfaceContainerLow, radius 16, padding 16
         card = MDCard(
-            style="outlined",
+            style="filled",
             theme_bg_color="Custom",
-            md_bg_color="#DAE5C8",
-            theme_line_color="Custom",
-            line_color="#A3B18A",
-            line_width=1.2,
-            radius=[24, 24, 24, 24],
-            size_hint=(None, None),
-            size=("200dp", "75dp"),
-            padding="12dp",
+            md_bg_color=MDApp.get_running_app().theme_cls.surfaceContainerLowColor,
+            orientation="horizontal",
+            radius=[dp(16)],
+            padding=dp(16),
+            spacing=dp(14),
+            size_hint=(1, None),
+            height=dp(75),  # non-zero start size: MDCard builds a ripple FBO at init
         )
+
+        card.add_widget(MDIcon(icon=icon, pos_hint={"center_y": 0.5}))
 
         label = MDLabel(
             text="",
-            halign="center",
-            theme_text_color="Custom",
-            text_color="#344E41",
+            font_style="Title",
+            role="small",
+            adaptive_height=True,
+            pos_hint={"center_y": 0.5},
         )
-
         card.add_widget(label)
+
+        if chevron:
+            card.add_widget(MDIcon(icon="chevron-right",
+                                   pos_hint={"center_y": 0.5}))
+
+        # Grow with the content only after construction (replaces adaptive_height)
+        card.bind(minimum_height=card.setter("height"))
+
         card.label = label
         return card
