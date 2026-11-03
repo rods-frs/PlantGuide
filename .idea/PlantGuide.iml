@@ -7,7 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.venv1" />
       <excludeFolder url="file://$MODULE_DIR$/.buildozer" />
     </content>
-    <orderEntry type="jdk" jdkName="~/PycharmProjects/PlantGuide/.venv1" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="~/PycharmProjects/PlantGuide/.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

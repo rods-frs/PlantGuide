@@ -40,7 +40,7 @@ class WaterBar(MDBoxLayout):
     def on_level(self, instance, value):
         if not hasattr(self, "_blocks"):  # fires once during super().__init__
             return
-        filled = (0.13, 0.59, 0.95, 1)
+        filled = (0.20, 0.60, 0.35, 1)    # green
         empty = (0.5, 0.5, 0.5, 0.25)
         for i, block in enumerate(self._blocks):
             block.md_bg_color = filled if i < int(value) else empty
@@ -49,9 +49,11 @@ class WaterBar(MDBoxLayout):
 def _title_row(icon, text):
     row = MDBoxLayout(orientation="horizontal", spacing=dp(8),
                       adaptive_height=True)
-    row.add_widget(MDIcon(icon=icon, pos_hint={"center_y": 0.5}))
+    row.add_widget(MDIcon(icon=icon, pos_hint={"center_y": 0.5},
+                          theme_text_color="Custom", text_color=(0, 0, 0, 1)))
     row.add_widget(MDLabel(text=text, font_style="Title", role="small",
-                           adaptive_height=True, pos_hint={"center_y": 0.5}))
+                           adaptive_height=True, pos_hint={"center_y": 0.5},
+                           theme_text_color="Custom", text_color=(0, 0, 0, 1)))
     return row
 
 
@@ -61,7 +63,8 @@ def _bar_section(icon, title, days_text, level):
     section.add_widget(_title_row(icon, title))
     section.add_widget(WaterBar(level=level))
     section.add_widget(MDLabel(text=f"{days_text}  •  {level}/10",
-                               adaptive_height=True))
+                               adaptive_height=True,
+                               theme_text_color="Custom", text_color=(0, 0, 0, 1)))
     return section
 
 
@@ -76,7 +79,7 @@ def build_water_card(water_every_days, water_every_days_winter,
         radius=[dp(16)],
         adaptive_height=True,
         size_hint_x=1,
-        md_bg_color=MDApp.get_running_app().theme_cls.surfaceContainerLowColor,
+        md_bg_color=(0.90, 0.95, 0.88, 1),  # light green card
     )
 
     # Header
@@ -105,14 +108,16 @@ def build_water_card(water_every_days, water_every_days_winter,
     method_box.add_widget(_title_row("watering-can", "Como regar"))
     method_box.add_widget(MDLabel(
         text=WATER_METHOD_LABELS.get(water_method, str(water_method)),
-        adaptive_height=True))
+        adaptive_height=True,
+        theme_text_color="Custom", text_color=(0, 0, 0, 1)))
     card.add_widget(method_box)
 
     # Amount
     amount_box = MDBoxLayout(orientation="vertical", spacing=dp(4),
                              adaptive_height=True)
     amount_box.add_widget(_title_row("cup-water", "Quantidade"))
-    amount_box.add_widget(MDLabel(text=water_amount, adaptive_height=True))
+    amount_box.add_widget(MDLabel(text=water_amount, adaptive_height=True,
+                                   theme_text_color="Custom", text_color=(0, 0, 0, 1)))
     card.add_widget(amount_box)
 
     return card

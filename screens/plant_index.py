@@ -1,3 +1,5 @@
+"""Plant index screen — shows a scrollable list of all plant cards."""
+
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
@@ -8,15 +10,19 @@ from kivymd.uix.label import MDLabel
 from kivy.metrics import dp
 
 class PlantIndex(MDScreen):
+    """Main plant list screen with a title bar and scrollable card list."""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.selected_plant=None
-        self.md_bg_color = self.theme_cls.backgroundColor
+        self.md_bg_color = (0.22, 0.36, 0.25, 1)  # medium green background
 
+        # Scrollable view for the plant cards
         view=ScrollView()
         main_layout=MDBoxLayout(orientation="vertical")
         top_bar = self.build_title_bar()
 
+        # Build the card layout from the plant_card widget
         card_layout=CL(self, None)
 
         view.add_widget(card_layout)
@@ -25,6 +31,7 @@ class PlantIndex(MDScreen):
         self.add_widget(main_layout)      # only one child on the screen now
 
     def build_title_bar(self, text="Coracao de Trevo"):
+        """Creates the app title bar at the top of the screen."""
         bar = MDBoxLayout(
             orientation="horizontal",
             adaptive_height=True,
@@ -38,5 +45,7 @@ class PlantIndex(MDScreen):
             halign="center",
             adaptive_height=True,
             pos_hint={"center_y": 0.5},
+            theme_text_color="Custom",
+            text_color=(1, 1, 1, 1),
         ))
         return bar
