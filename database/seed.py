@@ -8,7 +8,7 @@ def plant_base_data():
     {"name": "Hortelã",          "search_name": "hortela",     "type": "Erva",      "water_per_day": "alta",  "size": "pequeno"},
     {"name": "Alecrim",          "search_name": "alecrim",     "type": "Erva",      "water_per_day": "baixa", "size": "médio"},
     {"name": "Salsa",            "search_name": "salsa",       "type": "Erva",      "water_per_day": "média", "size": "pequeno"},
-    {"name": "Tomate",           "search_name": "tomate",      "type": "Legume",    "water_per_day": "alta",  "size": "grande"},
+    {"name": "Tomate",           "search_name": "tomate",      "type": "Fruta",    "water_per_day": "alta",  "size": "grande"},
     {"name": "Alface",           "search_name": "alface",      "type": "Verdura",   "water_per_day": "média", "size": "pequeno"},
     {"name": "Pimentão",         "search_name": "pimentao",    "type": "Legume",    "water_per_day": "média", "size": "médio"},
     {"name": "Cenoura",          "search_name": "cenoura",     "type": "Legume",    "water_per_day": "média", "size": "pequeno"},

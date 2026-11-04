@@ -11,7 +11,7 @@ from pathlib import Path
 global_db_path = None
 
 def start_db(db_path):
-    """Create the database tables and seed them with initial plant data."""
+    """Create the database tables and seed them with initial plant data. """
     global global_db_path
     global_db_path = db_path
     conn = sqlite3.connect(db_path)
